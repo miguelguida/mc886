@@ -25,13 +25,44 @@ def import_dataset():
 
     return array
 
-array = import_dataset()
+# array = import_dataset()
+def import_wine_dataset():
+    wine_names = ['Class', 'Alcohol', 'Malic acid', 'Ash', 'Alcalinity of ash', 'Magnesium', 'Total phenols', \
+                  'Flavanoids', 'Nonflavanoid phenols', 'Proanthocyanins', 'Color intensity', 'Hue', 'OD280/OD315',\
+                  'Proline']
+    wine_data = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/wine/wine.data', names = wine_names) 
+    wine_with_class = pd.DataFrame(wine_data)
+    wine_with_class.Class = wine_with_class.Class - 1 # formata a coluna "Class"
+
+    # wine_df.plot.scatter(x = 'Alcohol', y = 'OD280/OD315', c= 'Class', figsize=(12,8), colormap='jet')
+    # show()
+    # print(wine_df.to_numpy())
+    wine_df = wine_with_class[['Alcohol', 'Malic acid', 'Ash', 'Alcalinity of ash', 'Magnesium', 'Total phenols', \
+                  'Flavanoids', 'Nonflavanoid phenols', 'Proanthocyanins', 'Color intensity', 'Hue', 'OD280/OD315',\
+                  'Proline']]
+    return wine_df.to_numpy()
+
+# array = import_dataset()
+array = import_wine_dataset()
 
 scaler = StandardScaler()
 scaler.fit(array)
 scaler.mean_
 scaled_data = scaler.transform(array)
+# print(array.shape)
+# print(array)
 
+pca = PCA()
+pca_data = pca.fit_transform(scaled_data)
+print(pca.explained_variance_ratio_)
+per_var = np.round(pca.explained_variance_ratio_*100, decimals=1)
+labels = ['Alcohol', 'Malic acid', 'Ash', 'Alc. of ash', 'Magnesium', 'Total phenols', \
+              'Flavanoids', 'Nonfl. phen.', 'Proanthocyanins', 'Color intensity', 'Hue', 'OD280/OD315',\
+              'Proline']
+plt.bar(x=range(1,len(per_var)+1), height=per_var, tick_label=labels)
+plt.ylabel('Percentage of ExplainedVariance')
+plt.xlabel('Principal Component')
+plt.show()
 
 '''
     Solucao para Agglomerative Hierarchical Clustering
@@ -113,3 +144,4 @@ def agglomerativeHierarchicalCluster(points, k):
     return clusterMap
 
 print(agglomerativeHierarchicalCluster(scaled_data, 3))
+print(agglomerativeHierarchicalCluster(pca_data, 3))
