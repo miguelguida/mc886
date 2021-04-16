@@ -7,6 +7,8 @@ from random import *
 import pandas as pd
 import sys
 
+from mpl_toolkits.mplot3d import Axes3D
+
 def import_dataset():
     with open('cluster.dat') as binary_file:
         data = []
@@ -55,14 +57,52 @@ scaled_data = scaler.transform(array)
 pca = PCA()
 pca_data = pca.fit_transform(scaled_data)
 print(pca.explained_variance_ratio_)
+
 per_var = np.round(pca.explained_variance_ratio_*100, decimals=1)
 labels = ['Alcohol', 'Malic acid', 'Ash', 'Alc. of ash', 'Magnesium', 'Total phenols', \
               'Flavanoids', 'Nonfl. phen.', 'Proanthocyanins', 'Color intensity', 'Hue', 'OD280/OD315',\
               'Proline']
+'''
 plt.bar(x=range(1,len(per_var)+1), height=per_var, tick_label=labels)
 plt.ylabel('Percentage of ExplainedVariance')
 plt.xlabel('Principal Component')
 plt.show()
+'''
+
+
+plt.bar(x=range(1, 6), height=per_var[:5], tick_label=labels[:5])
+plt.show()
+
+pca_df = pd.DataFrame(pca_data.T[:5], index=labels[:5])
+print(pca_df)
+
+'''
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.scatter(pca_df[labels[0]], pca_df[labels[1]], pca_df[labels[2]], c='r', marker='o')
+
+ax.set_xlabel(labels[0])
+ax.set_ylabel(labels[1])
+ax.set_zlabel(labels[2])
+
+plt.show()
+'''
+
+loading_scores = pd.Series(pca.components_[0])
+sorted_loading_scores = loading_scores.abs().sort_values(ascending=False)
+top_scores = sorted_loading_scores[:5].index.values
+print(loading_scores[top_scores])
+
+
+plt.scatter(pca_df[0], pca_df[1])
+plt.xlabel('Pc1 - {0}%'.format(per_var[0]))
+plt.ylabel('Pc2 - {0}%'.format(per_var[1]))
+
+for idx in pca_df.index:
+    plt.annotate(idx, (pca_df[0].loc[idx], pca_df[1].loc[idx]))
+
+plt.show()
+
 
 '''
     Solucao para Agglomerative Hierarchical Clustering
