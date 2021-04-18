@@ -54,7 +54,7 @@ scaled_data = scaler.transform(array)
 # print(array.shape)
 # print(array)
 
-pca = PCA()
+pca = PCA(n_components=3)
 pca_data = pca.fit_transform(scaled_data)
 print(pca.explained_variance_ratio_)
 
@@ -73,7 +73,7 @@ plt.show()
 plt.bar(x=range(1, 14), height=per_var[:13], tick_label=labels[:13])
 plt.show()
 '''
-pca_df = pd.DataFrame(pca_data.T, index=labels)
+pca_df = pd.DataFrame(pca_data.T, index=labels[:3])
 print(pca_df)
 
 loading_scores = pd.Series(pca.components_[0])
