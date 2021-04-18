@@ -69,24 +69,12 @@ plt.xlabel('Principal Component')
 plt.show()
 '''
 
-
-plt.bar(x=range(1, 6), height=per_var[:5], tick_label=labels[:5])
+'''
+plt.bar(x=range(1, 14), height=per_var[:13], tick_label=labels[:13])
 plt.show()
-
-pca_df = pd.DataFrame(pca_data.T[:5], index=labels[:5])
+'''
+pca_df = pd.DataFrame(pca_data.T, index=labels)
 print(pca_df)
-
-'''
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-ax.scatter(pca_df[labels[0]], pca_df[labels[1]], pca_df[labels[2]], c='r', marker='o')
-
-ax.set_xlabel(labels[0])
-ax.set_ylabel(labels[1])
-ax.set_zlabel(labels[2])
-
-plt.show()
-'''
 
 loading_scores = pd.Series(pca.components_[0])
 sorted_loading_scores = loading_scores.abs().sort_values(ascending=False)
@@ -95,11 +83,22 @@ print(loading_scores[top_scores])
 
 
 plt.scatter(pca_df[0], pca_df[1])
-plt.xlabel('Pc1 - {0}%'.format(per_var[0]))
-plt.ylabel('Pc2 - {0}%'.format(per_var[1]))
+plt.xlabel('Pc1({1}) - {0}%'.format(per_var[0], labels[0]))
+plt.ylabel('Pc2({1}) - {0}%'.format(per_var[1], labels[1]))
 
 for idx in pca_df.index:
     plt.annotate(idx, (pca_df[0].loc[idx], pca_df[1].loc[idx]))
+
+plt.show()
+
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.scatter(pca_df[0], pca_df[1], pca_df[2], c='r', marker='o')
+
+ax.set_xlabel('Pc1({1}) - {0}%'.format(per_var[0], labels[0]))
+ax.set_ylabel('Pc2({1}) - {0}%'.format(per_var[1], labels[1]))
+ax.set_zlabel('Pc3({1}) - {0}%'.format(per_var[2], labels[2]))
 
 plt.show()
 
@@ -182,6 +181,7 @@ def agglomerativeHierarchicalCluster(points, k):
        
 
     return clusterMap
-
+'''
 print(agglomerativeHierarchicalCluster(scaled_data, 3))
 print(agglomerativeHierarchicalCluster(pca_data, 3))
+'''
