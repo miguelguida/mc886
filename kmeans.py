@@ -52,12 +52,12 @@ scaler.fit(array)
 scaler.mean_
 scaled_data = scaler.transform(array)
 
-pca = PCA(n_components=9)
+pca = PCA(n_components=7)
 pca_data = pca.fit_transform(scaled_data)
 print(pca.explained_variance_ratio_)
 
 def euclideanDistance(p, q):
-    return distance.euclidean(p[:9], q[:9], pca.explained_variance_ratio_)
+    return distance.euclidean(p[:7], q[:7])
 
 # calculate euclidean distances
 def getClusterMap(k, centroids, array):
@@ -188,6 +188,6 @@ def kmeans(k, array, n_iter=5):
     plotCluster(clusterMap)
                                  
 
-kmeans(4, scaled_data, 10)
+kmeans(3, scaled_data, 10)
     
     

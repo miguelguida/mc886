@@ -54,9 +54,13 @@ scaled_data = scaler.transform(array)
 # print(array.shape)
 # print(array)
 
-pca = PCA(n_components=3)
+pca = PCA()
 pca_data = pca.fit_transform(scaled_data)
 print(pca.explained_variance_ratio_)
+
+print(np.sum(pca.explained_variance_ratio_[:3]))
+print(np.sum(pca.explained_variance_ratio_[:5]))
+print(np.sum(pca.explained_variance_ratio_[:7]))
 
 per_var = np.round(pca.explained_variance_ratio_*100, decimals=1)
 labels = ['Alcohol', 'Malic acid', 'Ash', 'Alc. of ash', 'Magnesium', 'Total phenols', \
@@ -73,7 +77,7 @@ plt.show()
 plt.bar(x=range(1, 14), height=per_var[:13], tick_label=labels[:13])
 plt.show()
 '''
-pca_df = pd.DataFrame(pca_data.T, index=labels[:3])
+pca_df = pd.DataFrame(pca_data.T, index=labels)
 print(pca_df)
 
 loading_scores = pd.Series(pca.components_[0])
