@@ -39,28 +39,29 @@ kick1 = import_dataset('kick1.dat')
 
 # plt.show()
 
-def regressaoLinear(X, Y):
+def regressaoLinear(X, Y, iterations, learning_rate, W_scale = 0.05):
     print(X.shape)
     n = X.shape[1]
     m = X.shape[0]
 
-    W = np.random.rand(1,n+1)*0.05 
+    W = np.random.rand(1,n+1)*W_scale 
     print("Init W: ", W)           
     
-    learning_rate = 0.005
     costs = []
-    iterations = 120
-
     for it in range(0,iterations):
         W, j = gradient_desc(W,X,Y,m,n,learning_rate)
         costs.append(j)
-    
+
+    plotGrafico(W,X,Y,costs,iterations)
+     
+
+def plotGrafico(W,X,Y,costs,iterations):
     h = calc_h(W, X)
     fig = plt.figure()
 
     ax = fig.add_subplot(111, projection='3d')
     ax.scatter(X[:,0], X[:,1], Y[:]) 
-    ax.scatter(X[:,0], X[:,1], h) 
+    ax.scatter(X[:,0], X[:,1], h)
 
     i = 2
     y = 1.109 - 0.050
@@ -104,24 +105,26 @@ def calc_h(W, X):
     return h
 
 def gradient_desc(W,X,Y,m,n,learning_rate):
-        h = calc_h(W,X)
-        # print(h.shape)
-        # print(h)
-        j = cost(h, Y)
-        print("cost: ",j)
+    h = calc_h(W,X)
+    # print(h.shape)
+    # print(h)
+    j = cost(h, Y)
+    print("cost: ",j)
 
-        grads = {}
-        grads["dw0"] = (1/m)*np.sum((h-Y))
-        for i in range(1,n+1):
-            grads["dw"+str(i)] = (1/m)*np.sum((h-Y)*X[:,i-1])
-        # print(grads)
-        for i in range(0,n+1):
-            W[0,i] = W[0,i] - learning_rate*grads["dw"+str(i)]
-        # print(W)
-        return W,j
+    grads = {}
+    grads["dw0"] = (1/m)*np.sum((h-Y))
+    for i in range(1,n+1):
+        grads["dw"+str(i)] = (1/m)*np.sum((h-Y)*X[:,i-1])
+    # print(grads)
+    for i in range(0,n+1):
+        W[0,i] = W[0,i] - learning_rate*grads["dw"+str(i)]
+    # print(W)
+    return W,j
 
 
-
-regressaoLinear(kick1[:,:2], kick1[:,2])
+learning_rate = 0.005
+iterations = 120
+W_scale = 0.05
+regressaoLinear(kick1[:,:2], kick1[:,2], iterations, learning_rate, W_scale)
 # regressaoLinear(kick1[:,[1,2]], kick1[:,0])
 # regressaoLinear(kick1[:,[0,2]], kick1[:,1])

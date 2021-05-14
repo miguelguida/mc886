@@ -39,7 +39,7 @@ kick2 = import_dataset('kick2.dat')
 
 # plt.show()
 
-def regressaoPolinomial(X_original, Y):
+def regressaoPolinomial(X_original, Y, iterations, learning_rate, W_scale=0.0009):
     print(X_original.shape)
     
     # X = np.array(X_original, copy=True)
@@ -48,12 +48,10 @@ def regressaoPolinomial(X_original, Y):
     print(X)
     n = X.shape[1]
     m = X.shape[0]
-    W = np.random.rand(1,n+1)*0.0009 
+    W = np.random.rand(1,n+1)*W_scale 
     print("Init W: ", W)           
     
-    learning_rate = 0.009
     costs = []
-    iterations = 60
 
     for it in range(0,iterations):
         W, j = gradient_desc(W,X,Y,m,n,learning_rate)
@@ -76,21 +74,21 @@ def calc_h(W, X):
     return h
 
 def gradient_desc(W,X,Y,m,n,learning_rate):
-        h = calc_h(W,X)
-        # print(h.shape)
-        # print(h)
-        j = cost(h, Y)
-        print("cost: ",j)
+    h = calc_h(W,X)
+    # print(h.shape)
+    # print(h)
+    j = cost(h, Y)
+    print("cost: ",j)
 
-        grads = {}
-        grads["dw0"] = (1/m)*np.sum((h-Y))
-        for i in range(1,n+1):
-            grads["dw"+str(i)] = (1/m)*np.sum((h-Y)*X[:,i-1])
-        # print(grads)
-        for i in range(0,n+1):
-            W[0,i] = W[0,i] - learning_rate*grads["dw"+str(i)]
-        # print(W)
-        return W,j
+    grads = {}
+    grads["dw0"] = (1/m)*np.sum((h-Y))
+    for i in range(1,n+1):
+        grads["dw"+str(i)] = (1/m)*np.sum((h-Y)*X[:,i-1])
+    # print(grads)
+    for i in range(0,n+1):
+        W[0,i] = W[0,i] - learning_rate*grads["dw"+str(i)]
+    # print(W)
+    return W,j
 
 def plotRegression(W,X,Y,h,iterations,costs, X_original):
     fig = plt.figure()
@@ -119,13 +117,15 @@ def plotRegression(W,X,Y,h,iterations,costs, X_original):
         predH.append(h)
         i+=1
 
-    ax.scatter(predX1[:], predX2[:], predH[:]) # plot the point (2,3,4) on the figure
+    ax.scatter(predX1[:], predX2[:], predH[:]) 
     plt.show()
 
     plt.plot(range(0,iterations),costs[:])
     plt.show()
 
-
-regressaoPolinomial(kick2[:,:2], kick2[:,2])
+learning_rate = 0.009
+iterations = 60
+W_scale=0.0009
+regressaoPolinomial(kick2[:,:2], kick2[:,2], iterations, learning_rate, W_scale)
 # regressaoLinear(kick1[:,[1,2]], kick1[:,0])
 # regressaoLinear(kick1[:,[0,2]], kick1[:,1])
