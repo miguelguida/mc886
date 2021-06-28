@@ -129,6 +129,7 @@ class Layout:
             self.agentPositions.append( (int(layoutChar), (x,y)))
             self.numGhosts += 1
 def getLayout(name, back = 2):
+    print("layout: ", name )
     if name.endswith('.lay'):
         layout = tryToLoad('layouts/' + name)
         if layout == None: layout = tryToLoad(name)
